@@ -1,0 +1,37 @@
+# 환경변수
+.env
+.env.local
+.env.*.local
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# 업로드된 파일
+backend/uploads/
+
+# Node / 프론트엔드
+node_modules/
+frontend/dist/
+frontend/.vite/
+.npm
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Vercel
+.vercel/
