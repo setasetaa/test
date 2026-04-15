@@ -62,7 +62,6 @@ export default function ParsePreview({ data, onSave, onCancel }) {
         </div>
       </div>
 
-      {/* 품목 목록 */}
       {form.items?.length > 0 && (
         <div className="mb-4">
           <p className="text-xs text-gray-500 mb-2">품목 목록</p>

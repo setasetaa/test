@@ -60,7 +60,6 @@ export default function ExpenseDetail() {
       </button>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">지출 상세</h1>
 
-      {/* 영수증 이미지 */}
       {expense?.raw_image_path && (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-4">
           <img
@@ -72,7 +71,6 @@ export default function ExpenseDetail() {
         </div>
       )}
 
-      {/* 수정 폼 */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <div className="flex items-center gap-2 mb-4">
           <Badge category={form.category} />
@@ -119,7 +117,6 @@ export default function ExpenseDetail() {
           </div>
         </div>
 
-        {/* 품목 목록 */}
         {form.items?.length > 0 && (
           <div className="mt-4 border-t border-gray-100 pt-4">
             <p className="text-xs text-gray-500 mb-2">품목 목록</p>

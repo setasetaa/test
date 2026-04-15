@@ -7,22 +7,17 @@ import ExpenseCard from '../components/ExpenseCard.jsx';
 export default function Dashboard() {
   const [expenses, setExpenses] = useState([]);
   const [summary, setSummary] = useState({});
-  const [thisMonth, setThisMonth] = useState(0);
   const [loading, setLoading] = useState(true);
-
-  const currentMonth = new Date().toISOString().slice(0, 7);
 
   async function fetchData(params = {}) {
     setLoading(true);
     try {
-      const [expRes, sumRes, monthRes] = await Promise.all([
+      const [expRes, sumRes] = await Promise.all([
         getExpenses(params),
         getSummary(),
-        getSummary(currentMonth),
       ]);
       setExpenses(expRes.data.data || []);
       setSummary(sumRes.data);
-      setThisMonth(monthRes.data.총_지출 || 0);
     } catch (e) {
       console.error(e);
     } finally {
@@ -42,9 +37,9 @@ export default function Dashboard() {
   return (
     <div>
       <SummaryCard
-        total={summary.총_지출 || 0}
-        thisMonth={thisMonth}
-        byCategory={summary.카테고리별 || {}}
+        total={summary.total_amount || 0}
+        thisMonth={summary.this_month_amount || 0}
+        categoryList={summary.category_summary || []}
       />
       <FilterBar onFilter={handleFilter} />
 

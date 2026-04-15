@@ -10,7 +10,7 @@ function Header() {
     <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
         <Link to="/" className="text-lg font-bold text-indigo-600">
-          🧾 Receipt Tracker
+          Receipt Tracker
         </Link>
         <button
           onClick={() => navigate('/upload')}
