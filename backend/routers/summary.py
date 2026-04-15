@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Query
 
 from services.storage_service import load_expenses
@@ -8,28 +10,47 @@ router = APIRouter()
 @router.get(
     "/summary",
     tags=["지출"],
-    summary="월별 지출 통계",
-    description="`month` 파라미터(YYYY-MM)로 특정 월을 조회합니다. 생략 시 전체 통계를 반환합니다.",
+    summary="지출 통계 조회",
+    description=(
+        "`month` 파라미터(YYYY-MM)로 특정 월의 카테고리별 통계를 조회합니다. "
+        "`total_amount`(전체 합계)와 `this_month_amount`(이번달 합계)는 항상 반환됩니다."
+    ),
 )
 def get_summary(month: str = Query(None, description="조회 월 (YYYY-MM)")):
-    expenses = load_expenses()
+    all_expenses = load_expenses()
 
-    if month:
-        expenses = [
-            e for e in expenses
-            if e.get("receipt_date") and e["receipt_date"].startswith(month)
-        ]
+    current_month = datetime.now().strftime("%Y-%m")
 
-    total = sum(e.get("total_amount", 0) for e in expenses)
+    # 전체 합계
+    total_amount = sum(e.get("total_amount", 0) for e in all_expenses)
 
-    by_category: dict = {}
-    for e in expenses:
+    # 이번달 합계
+    this_month_expenses = [
+        e for e in all_expenses
+        if e.get("receipt_date", "").startswith(current_month)
+    ]
+    this_month_amount = sum(e.get("total_amount", 0) for e in this_month_expenses)
+
+    # 카테고리별 통계 (month 파라미터로 필터)
+    target = [
+        e for e in all_expenses
+        if e.get("receipt_date", "").startswith(month)
+    ] if month else all_expenses
+
+    category_map: dict = {}
+    for e in target:
         cat = e.get("category", "기타")
-        by_category[cat] = by_category.get(cat, 0) + e.get("total_amount", 0)
+        category_map[cat] = category_map.get(cat, 0) + e.get("total_amount", 0)
+
+    category_summary = [
+        {"category": cat, "amount": amount}
+        for cat, amount in sorted(category_map.items(), key=lambda x: -x[1])
+    ]
 
     return {
+        "total_amount": total_amount,
+        "this_month_amount": this_month_amount,
+        "category_summary": category_summary,
+        "건수": len(target),
         "조회_기간": month or "전체",
-        "총_지출": total,
-        "건수": len(expenses),
-        "카테고리별": by_category,
     }
